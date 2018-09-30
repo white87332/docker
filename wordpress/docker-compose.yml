@@ -1,0 +1,22 @@
+version: '3'
+services:
+  # mysql:
+  #   image: mysql
+  #   volumes:
+  #     - /Users/yancheng/Documents/db_data:/var/lib/mysql
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: wordpress
+  #     MYSQL_USER: wordpress
+  #     MYSQL_PASSWORD: wordpress
+
+  wordpress: 
+    container_name: wordpress
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: web
+    ports:
+      - "3000:80"
+    # depends_on:
