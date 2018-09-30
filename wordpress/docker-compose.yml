@@ -18,7 +18,5 @@ services:
       dockerfile: Dockerfile
     image: web
     ports:
-      - "3000:80"
-    volumes:
-      - ./run.sh:/home/run.sh
+      - "3000:8080"
     # depends_on:

@@ -20,6 +20,7 @@ RUN apt-get update && apt-get upgrade -y \
     php$PHP_VERSON-gd \
     php$PHP_VERSON-xml \
     php$PHP_VERSON-mysql \
+    php$PHP_VERSON-pgsql \
     php$PHP_VERSON-cli \
     php$PHP_VERSON-zip \
     php$PHP_VERSON-curl \
@@ -37,4 +38,9 @@ RUN wget -c http://wordpress.org/latest.tar.gz \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/
 
-ENTRYPOINT ["./home/run.sh"]
+COPY ./site.nginx.conf /etc/nginx/sites-enabled/site.nginx.conf 
+COPY ./site.nginx.conf /etc/nginx/sites-available/site.nginx.conf 
+COPY ./php.ini /etc/php/7.2/fpm/php.ini
+COPY ./run.sh /home/run.sh
+
+CMD ["./home/run.sh"]
