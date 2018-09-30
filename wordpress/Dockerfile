@@ -43,4 +43,4 @@ COPY ./site.nginx.conf /etc/nginx/sites-available/site.nginx.conf
 COPY ./php.ini /etc/php/7.2/fpm/php.ini
 COPY ./run.sh /home/run.sh
 
-CMD ["./home/run.sh"]
+ENTRYPOINT ["./home/run.sh"]
