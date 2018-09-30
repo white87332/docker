@@ -9,6 +9,7 @@ RUN apt-get update && apt-get upgrade -y \
     && LC_ALL=C.UTF-8 apt-add-repository ppa:ondrej/php \
     && apt-get update && apt-get upgrade -y \
     && apt-get install -y \
+    rsync \
     vim \
     wget \
     php$PHP_VERSON \
@@ -29,4 +30,11 @@ RUN apt-get update && apt-get upgrade -y \
 	nginx \
 	nginx-extras
 
-ENTRYPOINT ["./run.sh"]
+RUN wget -c http://wordpress.org/latest.tar.gz \
+    && tar zxvf latest.tar.gz \
+    && rsync -av wordpress /var/www/html/ \
+    && rm latest.tar.gz \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/
+
+ENTRYPOINT ["./home/run.sh"]

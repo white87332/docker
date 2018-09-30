@@ -19,4 +19,6 @@ services:
     image: web
     ports:
       - "3000:80"
+    volumes:
+      - ./run.sh:/home/run.sh
     # depends_on:
