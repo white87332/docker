@@ -1,10 +1,9 @@
-from ubuntu
+from ubuntuL:latest
 
 ENV PHP_VERSON 7.2
 
 RUN apt-get update && apt-get upgrade -y \
     && apt-get install -y \
-    python-software-properties \
     software-properties-common \
     && LC_ALL=C.UTF-8 apt-add-repository ppa:ondrej/php \
     && apt-get update && apt-get upgrade -y \
