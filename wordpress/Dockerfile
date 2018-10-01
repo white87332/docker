@@ -1,4 +1,4 @@
-from ubuntuL:latest
+from ubuntu:latest
 
 ENV PHP_VERSON 7.2
 
