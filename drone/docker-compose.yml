@@ -11,9 +11,9 @@ services:
       - DRONE_ADMIN=white87332
       - DRONE_HOST=http://192.168.2.56
       - DRONE_BITBUCKET=true
-      - DRONE_BITBUCKET_CLIENT=Mvmd3xU6nZgsPVwAN9
-      - DRONE_BITBUCKET_SECRET=338V6Pcydxb6TBQ9e9hVy3V3bN3HCsUQ
-      - DRONE_SECRET=1234qwer
+      - DRONE_BITBUCKET_CLIENT=
+      - DRONE_BITBUCKET_SECRET=
+      - DRONE_SECRET=
     volumes:
       - /var/lib/drone
   drone-agent:
@@ -25,4 +25,4 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock
       environment:
         - DRONE_SERVER=drone-server:9000
-        - DRONE_SECRET=1234qwer
+        - DRONE_SECRET=
