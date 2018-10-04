@@ -37,9 +37,15 @@ RUN wget -c http://wordpress.org/latest.tar.gz \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/
 
-COPY ./site.nginx.conf /etc/nginx/sites-enabled/site.nginx.conf 
-COPY ./site.nginx.conf /etc/nginx/sites-available/site.nginx.conf 
+COPY ./nginx/logrotate/nginx /etc/logrotate.d/nginx
+
+COPY ./nginx/config/default /etc/nginx/sites-available/default
+
+COPY ./nginx/config/site.nginx.conf /etc/nginx/sites-available/site.nginx.conf
+RUN ln -s /etc/nginx/sites-available/site.nginx.conf /etc/nginx/sites-enabled/site.nginx.conf
+
 COPY ./php.ini /etc/php/7.2/fpm/php.ini
+
 COPY ./run.sh /home/run.sh
 
 ENTRYPOINT ["./home/run.sh"]
