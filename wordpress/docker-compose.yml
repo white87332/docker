@@ -2,28 +2,24 @@ version: '3.3'
 services:
   db:
     container_name: db
-    image: mysql:latest
+    image: mysql:5.7
     volumes:
       - /Users/tidenet/Documents/db_data:/var/lib/mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress
+      - MYSQL_ROOT_PASSWORD=wordpress
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
 
-  web: 
+  web:
     container_name: wordpress
     build:
       context: .
       dockerfile: Dockerfile
     image: web
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       - db
     restart: always
-    environment:
-       WORDPRESS_DB_HOST: db:3306
-       WORDPRESS_DB_USER: wordpress
-       WORDPRESS_DB_PASSWORD: wordpress
