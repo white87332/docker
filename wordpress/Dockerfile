@@ -30,13 +30,6 @@ RUN apt-get update && apt-get upgrade -y \
 	nginx \
 	nginx-extras
 
-RUN wget -c http://wordpress.org/latest.tar.gz \
-    && tar zxvf latest.tar.gz \
-    && rsync -av wordpress /var/www/html/ \
-    && rm latest.tar.gz \
-    && chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/
-
 COPY ./nginx/logrotate/nginx /etc/logrotate.d/nginx
 
 COPY ./nginx/config/default /etc/nginx/sites-available/default

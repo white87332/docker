@@ -4,7 +4,7 @@ services:
     container_name: db
     image: mysql:5.7
     volumes:
-      - /Users/tidenet/Documents/db_data:/var/lib/mysql
+      - /db_data:/var/lib/mysql
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=wordpress
@@ -18,6 +18,8 @@ services:
       context: .
       dockerfile: Dockerfile
     image: web
+    volumes:
+      - /wordpress:/var/www/html/wordpress
     ports:
       - "8080:80"
     depends_on:
