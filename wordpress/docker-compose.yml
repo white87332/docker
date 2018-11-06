@@ -4,7 +4,7 @@ services:
     container_name: db
     image: mysql:5.7
     volumes:
-      - /db_data:/var/lib/mysql
+      - /dockerWorkspace/db_data:/var/lib/mysql
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=wordpress
@@ -19,7 +19,7 @@ services:
       dockerfile: Dockerfile
     image: web
     volumes:
-      - /wordpress:/var/www/html/wordpress
+      - /dockerWorkspace/wordpress:/var/www/html/wordpress
     ports:
       - "8080:80"
     depends_on:

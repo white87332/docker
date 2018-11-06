@@ -24,6 +24,7 @@ RUN apt-get update && apt-get upgrade -y \
     php$PHP_VERSON-zip \
     php$PHP_VERSON-curl \
     php$PHP_VERSON-redis \
+    php$PHP_VERSON-opcache \
     && LC_ALL=C.UTF-8 add-apt-repository ppa:nginx/stable \
 	&& apt-get update && apt-get upgrade -y \
 	&& apt-get install -y \
