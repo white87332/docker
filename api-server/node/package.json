@@ -1,0 +1,26 @@
+{
+  "name": "api-server",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "dev": "PORT=3000 node index.js",
+    "prod": "PORT=80 node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": ""
+  },
+  "keywords": [
+    "express"
+  ],
+  "homepage": "",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongodb": "^3.1.10"
+  }
+}
