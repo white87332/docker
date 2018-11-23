@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
-const MongoClient = require('mongodb').MongoClient;
+const connect = require('mongodb').MongoClient.connect;
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -10,27 +10,26 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/api/1', (req, res) => {
-    res.json({
-        status: 0,
-        error: false,
-        data: []
-    })
-});
 
-app.get('/api/2', (req, res) => {
-    res.json({
-        status: 0,
-        error: false,
-        data: []
-    })
-});
+    connect('mongodb://mongodb:27017/database', { useNewUrlParser: true })
+    .then(async (db) => {
+        // const collection = db.collection('test');
+        console.log(db);
+        // const res = await collection.insertOne({name: "test", age: 19});
+        // const result = await collection.find({}).toArray();
+        // console.log(result);
+        // db.close();
+    },
+    (err)=>{
+        console.log("db connection error")
+        throw err;
+    });
 
-app.get('/api/3', (req, res) => {
-    res.json({
-        status: 0,
-        error: false,
-        data: []
-    })
+    // res.json({
+    //     status: 0,
+    //     error: false,
+    //     data: []
+    // })
 });
 
 // http
