@@ -1,35 +1,72 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
-const connect = require('mongodb').MongoClient.connect;
+const dbObj = require('./db/dbObj');
 
 const app = express();
 const port = process.env.PORT || 3000;
+dbObj.init();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/api/1', (req, res) => {
+app.get('/api/get', async (req, res) => {
+    try
+    {
+        const result = await dbObj.select('test', {}, { skipNumber : 0, limitNumber : 20, sort : { _id : 1 }});
 
-    connect('mongodb://mongodb:27017/database', { useNewUrlParser: true })
-    .then(async (db) => {
-        // const collection = db.collection('test');
-        console.log(db);
-        // const res = await collection.insertOne({name: "test", age: 19});
-        // const result = await collection.find({}).toArray();
-        // console.log(result);
-        // db.close();
-    },
-    (err)=>{
-        console.log("db connection error")
-        throw err;
-    });
+        res.json({
+            status: true,
+            data: result
+        });
+    }
+    catch (e)
+    {
+        res.json({
+            status: false,
+            data: []
+        });
+    }
+});
 
-    // res.json({
-    //     status: 0,
-    //     error: false,
-    //     data: []
-    // })
+app.post('/api/post', async (req, res) => {
+    try
+    {
+        const result = await dbObj.insert('test', req.body);
+
+        res.json({
+            status: true,
+            data: result
+        });
+    }
+    catch (e)
+    {
+        res.json({
+            status: false,
+            data: []
+        });
+    }
+});
+
+app.put('/api/put', async (req, res) => {
+
+    const body = req.body;
+    const result = await dbObj.update('test', body, { age: 25 });
+
+    if (!result)
+    {
+        res.json({
+            status: false,
+            data: []
+        });
+    }
+    else
+    {
+        res.json({
+            status: true,
+            data: result
+        });
+    }
 });
 
 // http
