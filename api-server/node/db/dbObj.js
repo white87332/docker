@@ -21,7 +21,7 @@ const self = module.exports = {
 
     /**
      * [select description]
-     * @param  {[type]}   document       document
+     * @param  {[type]}   collection       collection
      * @param  {[type]}   query          { _id: 56a07a7c57c3b99e3d5969fe }
      * @param  {[type]}   condition      {
      *                                   	skipNumber : 0
@@ -31,7 +31,7 @@ const self = module.exports = {
      *                                   	}
      *                                   }
      */
-    select: async (document, query, condition) => {
+    select: async (_collection, query, condition) => {
 
         let limitNumber;
         let skipNumber;
@@ -69,17 +69,16 @@ const self = module.exports = {
            }
        }
 
-       const collection = this.db.collection(document);
+       const collection = this.db.collection(_collection);
        return await collection.find(query).skip(skipNumber).limit(limitNumber).sort(sort).toArray();
     },
 
-    insert: (document, data) => {
-
+    insert: (_collection, data) => {
         data = isArray(data) ? data : [data];
         return new Promise(async (resolve, reject) => {
             try
             {
-                const collection = this.db.collection(document);
+                const collection = this.db.collection(_collection);
                 const res = await collection.insertMany(data);
 
                 resolve({
@@ -95,18 +94,35 @@ const self = module.exports = {
         });
     },
 
-    update : (document, where, data) => {
+    update : (collection, where, data) => {
 
         return new Promise(async (resolve, reject) => {
-            // const collection = this.db.collection(document);
+            // const collection = this.db.collection(collection);
             // const res = await collection.updateMany(where, { $set: data });
 
             // console.log(res);
             resolve();
         });
-    }
+    },
 
-    // delete: () => {
-    //
-    // }
+    /**
+    * [delete description]
+    * @param  {[type]}   collection collection
+    * @param  {[type]}   id         5bfba910ee66dba32f59c57f
+    */
+    delete: (_collection, _id) => {
+
+        return new Promise(async (resolve, reject) => {
+            try
+            {
+                let collection = this.db.collection(_collection);
+                const res = await collection.deleteMany({ _id: new ObjectID(_id) });
+                resolve(res);
+            }
+            catch (e)
+            {
+                reject(false);
+            }
+        });
+    }
 };
