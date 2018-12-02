@@ -1,0 +1,90 @@
+
+########  username & password ########
+sudo mkdir /auth
+sudo sh -c "docker run --entrypoint htpasswd registry:2.6.2 -Bbn tonyjiang asdf1234 > /auth/htpasswd"
+docker login -u tonyjiang -p asdf1234  192.168.1.163:5000
+
+######## certs ########
+mkdir -p certs
+
+docker run -d -p 5000:5000 \
+--restart=always \
+--name registry-srv \
+-v `pwd`/certs:/certs \
+-e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
+-e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+-e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
+-v /data/registry:/var/lib/registry \
+-p 443:443 \
+registry:2.6.2
+
+######## registry-web ########
+docker pull hyper/docker-registry-web
+mkdir -p ~/docker-registry-web/conf
+sudo mkdir -p /etc/docker/registry
+cd  ~/docker-registry-web
+openssl req -new -newkey rsa:4096 -days 365 -subj "/CN=localhost"  -nodes -x509 -keyout conf/auth.key -out conf/auth.cert
+cp conf/auth.cert /etc/docker/registry
+
+vim conf/registry-web.yml
+registry:
+  # Docker registry url
+  url: http://registry-srv:5000/v2
+  # To allow image delete, should be false
+  readonly: false
+  name: localhost:10050
+  auth:
+    # Disable authentication
+    enabled: true
+
+######## registry-srv.yml ########
+vim conf/registry-srv.yml
+version: 0.1
+log:
+  level: info
+  formatter: text
+  fields:
+    service: registry-srv
+    environment: production
+storage:
+  cache:
+    layerinfo: inmemory
+  filesystem:
+    rootdirectory: /var/lib/registry
+  delete:
+    # 要在 ui 上能够删除镜像，enable 的值必须是 true
+    enabled: true
+http:
+  addr: :5000
+  debug:
+    addr: :5001
+
+notifications:
+  endpoints:
+   - name: listener
+      url: http://localhost:8080/api/notification
+      timeout: 500ms
+      threshold: 5
+      backoff: 1s
+
+# 启动registry-srv,下面挂载数据卷，冒号前是宿主机下的绝对路径，冒号后为镜像内的挂载路径，可以挂载多个。并且最后设定为read only(ro,默认为rw)。注意以后删除容器最好用docker rm -v避免产生无主数据卷。
+cd  ~/docker-registry-web
+docker run \
+-v $(pwd)/conf/registry-srv.yml:/etc/docker/registry/config.yml:ro \
+-v $(pwd)/conf/auth.cert:/etc/docker/registry/auth.cert:ro \
+-p 5000:5000 \
+--name registry-srv \
+-d \
+registry:2.6.2
+
+# 启动registry-web
+cd  ~/docker-registry-web
+docker run \
+-v $(pwd)/conf/registry-web.yml:/conf/config.yml:ro \
+-v $(pwd)/conf/auth.key:/conf/auth.key \
+-v $(pwd)/db:/data \
+-d \
+-p 8080:8080 \
+--link registry-srv \
+--name registry-web \
+hyper/docker-registry-web
