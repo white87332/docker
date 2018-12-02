@@ -48,10 +48,8 @@ app.post('/api/post', async (req, res) => {
     }
 });
 
-app.put('/api/put', async (req, res) => {
-
-    const body = req.body;
-    const result = await dbObj.update('test', body, { age: 25 });
+app.delete('/api/del/:id', async (req, res) => {
+    const result = await dbObj.delete('test', req.params.id);
 
     if (!result)
     {
@@ -68,6 +66,27 @@ app.put('/api/put', async (req, res) => {
         });
     }
 });
+
+// app.put('/api/put', async (req, res) => {
+//
+//     const body = req.body;
+//     const result = await dbObj.update('test', body, { age: 25 });
+//
+//     if (!result)
+//     {
+//         res.json({
+//             status: false,
+//             data: []
+//         });
+//     }
+//     else
+//     {
+//         res.json({
+//             status: true,
+//             data: result
+//         });
+//     }
+// });
 
 // http
 const server = http.createServer(app).listen(port, () => {
