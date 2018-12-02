@@ -4,6 +4,11 @@ sudo mkdir /auth
 sudo sh -c "docker run --entrypoint htpasswd registry:2.6.2 -Bbn tonyjiang asdf1234 > /auth/htpasswd"
 docker login -u tonyjiang -p asdf1234  192.168.1.163:5000
 
+
+
+
+
+
 ######## certs ########
 mkdir -p certs
 
@@ -18,6 +23,11 @@ docker run -d -p 5000:5000 \
 -p 443:443 \
 registry:2.6.2
 
+
+
+
+
+
 ######## registry-web ########
 docker pull hyper/docker-registry-web
 mkdir -p ~/docker-registry-web/conf
@@ -26,7 +36,7 @@ cd  ~/docker-registry-web
 openssl req -new -newkey rsa:4096 -days 365 -subj "/CN=localhost"  -nodes -x509 -keyout conf/auth.key -out conf/auth.cert
 cp conf/auth.cert /etc/docker/registry
 
-vim conf/registry-web.yml
+vim ~/docker-registry-web/conf/registry-web.yml
 registry:
   # Docker registry url
   url: http://registry-srv:5000/v2
@@ -38,7 +48,7 @@ registry:
     enabled: true
 
 ######## registry-srv.yml ########
-vim conf/registry-srv.yml
+vim ~/docker-registry-web/conf/registry-srv.yml
 version: 0.1
 log:
   level: info
@@ -81,7 +91,7 @@ registry:2.6.2
 cd  ~/docker-registry-web
 docker run \
 -v $(pwd)/conf/registry-web.yml:/conf/config.yml:ro \
--v $(pwd)/conf/auth.key:/conf/auth.key \
+-v $(pwd)/conf/auth.key:/config/auth.key \
 -v $(pwd)/db:/data \
 -d \
 -p 8080:8080 \
